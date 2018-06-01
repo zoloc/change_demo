@@ -8,7 +8,9 @@ app = Flask(__name__)
 app.config.from_object(config)
 db.init_app(app)
 
-
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route('/extract/', methods=['GET','POST'])
 def extract():
@@ -16,7 +18,7 @@ def extract():
     print()
     pass
 
-@app.route('/')
+@app.route('/impact_list/')
 def impact_list():
     context = {
         'HIs' : Hi_dm_list.query.all()

@@ -1,11 +1,18 @@
 {% extends 'base.html' %}
 
-{% block title %}index{% endblock %}
+{% block title %}homepage{% endblock %}
 
 {% block head %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}" >
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 {% endblock %}
 
 {% block main %}
+    <div class="jumbotron">
+        <div class="jumbotron-container">
+            <h1>Welcome to CC homepage</h1>
+            <p>This website is aim to make the change work easy, fast and accurate</p>
+            <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
+        </div>
+    </div>
 
 {% endblock %}
