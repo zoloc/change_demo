@@ -2,7 +2,7 @@ from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from change_demo import app
 from exts import db
-from models import impact_list
+from models import Impact_list, User, Hi_dm_list
 
 manager = Manager(app)
 

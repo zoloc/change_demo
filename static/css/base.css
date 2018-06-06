@@ -1,10 +1,10 @@
 .logo {
     width: 100px;
+    margin-top: -10px;
+    margin-left: -5px;
+
 }
 
-.main{
-    background: #fff;
-    width: 800px;
-    margin: 10px;
-    padding: 10px;
+.navbar-brand{
+    position: relative;
 }
