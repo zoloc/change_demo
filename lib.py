@@ -1,7 +1,33 @@
 import re
+import numpy as np
+import pandas as pd
+
+def impact_list_preprocess(object):
+    # 对.xlsx文件进行处理后返回一个pandas.DataFrame类用于上传数据库
+    df = pd.read_excel(object)
+    column_change = {
+        'Change Number': 'change_number',
+        'Configuration of Change Authority': 'cfg_of_change_authority',
+        'Change Type(before)': 'change_type',
+        'Number(before)': 'pn_bef',
+        'Edition(before)': 'edition_bef',
+        'Quantity(before)': 'quantity_bef',
+        'Effectivity(before)': 'effectivity_bef',
+        'Number(after)': 'pn_after',
+        'Edition(after)': 'edition_aft',
+        'Quantity(after)': 'quantity_aft',
+        'Effectivity(after)': 'effectivity_aft'
+    }
+    df.rename(columns=column_change, inplace=True)
+    df['edz'] = df['pn_after'].apply(get_edz)
+    df.loc[df['edz'].isnull(), ['edz']] = df.loc[df['edz'].isnull(), ['pn_bef']]['pn_bef'].apply(get_edz)
+    return df
+
 def data_type(pn):
+    if pn is np.nan:
+        return 'N/A pn'
     # 判断PH
-    if len(pn) == 16 and re.match(r'PH_\d{3}0C\d{3}00G2\d',pn):
+    elif len(pn) == 16 and re.match(r'PH_\d{3}0C\d{3}00G2\d',pn):
         return 'PH'
     # 判断R模型
     elif re.match(r'R_\d{4}C\d{5}G\d{2}',pn):
@@ -35,18 +61,16 @@ def data_type(pn):
             return 'MBS'
         elif re.match(r'88\d0C\d{5}G7\d',pn):
             return 'Specific_RBA'
-    # 若全不匹配，返回N/A pn，用来识别错误pn
+    # 若全不匹配，返回N/A pn
     else:
         return 'N/A pn'
 
 def get_edz(pn):
-    # 根据不同DM进行判断返回edz号(Integer)
-    if pn is None:
+    if pn is np.nan:
         return None
-    if data_type(pn) in ['HI', 'GBN', 'MBS', 'RBA', 'DISC', 'DISC_ASY', 'DISC_RBA']:
-        return int(pn[2:4] + pn[5])
-    elif data_type(pn) in ['R_RBA', 'R_DISC_ASY', 'R_HI']:
-        return int(pn[4:6] + pn[7])
-    # 待完善：这里没有考虑Specific_RBA的edz情况，需要新建一个89G70对应edz的数据库表格
+    elif data_type(pn) in ['HI','GBN','MBS','RBA','DISC','DISC_ASY','DISC_RBA']:
+        return int(pn[2:4]+pn[5])
+    elif data_type(pn) in ['R_RBA','R_DISC_ASY','R_HI']:
+        return int(pn[4:6]+pn[7])
     else:
         return None
