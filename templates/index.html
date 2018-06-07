@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}homepage{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
+
+{% block main %}
+    <div class="jumbotron">
+        <div class="jumbotron-container">
+            <h1>Welcome to CC homepage</h1>
+            <p>This website is aim to make the change work easy, fast and accurate</p>
+            <p>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                    Log in
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      </div>
+                      <div class="modal-body">
+                          <div class="login-container">
+                              <h3 class="page-title">Login</h3>
+                              <form action="" method="POST"> {#加入第一个表单块#}
+                                <div class="form-container"> {# 加入第二个块以减小输入框的宽度 #}
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Username" name="telephone">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Password" name="password">
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn btn-primary btn-block">Login</button>
+                                    </div>
+                                </div>
+                              </form>
+                          </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Login</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+{#                <a class="btn btn-primary btn-lg" href="{{ url_for('login') }}" role="button">Get start</a>#}
+            </p>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Input{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fileinput.min.css') }}">
+    <script src="{{ url_for('static', filename='js/fileinput.min.js') }}"></script>
+{% endblock %}
+
+{% block main %}
+    <div class="page-header">
+        <h1>Impact List Upload</h1>
+    </div>
+    <form method="post" role="form" enctype="multipart/form-data">
+        <input id="input-impact_list" name="input-impact_list" type="file" class="file" data-allowed-file-extensions='["xlsx"]'>
+    </form>
+{% endblock %}
