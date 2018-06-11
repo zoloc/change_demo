@@ -4,6 +4,7 @@ import config
 from lib import impact_list_preprocess
 from exts import db
 from sqlalchemy import create_engine
+import json
 
 from models import Impact_list, Hi_dm_list
 
@@ -29,7 +30,7 @@ def upload_impact_list():
         return render_template('upload_success.html', upload_filename='Impact List ')
 
 
-@app.route('/impact_list_extract/', methods=['GET','POST'])
+@app.route('/impact_list_extract', methods=['GET','POST'])
 def impact_list_extract():
     if request.method == 'GET':
         context = {
@@ -37,10 +38,9 @@ def impact_list_extract():
         }
         return render_template('impact_list_extract.html', **context)
     else:
-        a = request.form.get('option[]')
-        b = [1,2,3,4]
-        print(a)
-        return render_template('extract_result.html', list=a)
+        edz_list = request.get_json('edz_data')
+        print(edz_list)
+        return render_template('extract_result.html', edz_list=edz_list)
 
 
 if __name__ == '__main__':
