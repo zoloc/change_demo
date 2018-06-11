@@ -16,31 +16,31 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/input-impact_list/', methods=['GET', 'POST'])
-def input():
+@app.route('/upload_impact_list/', methods=['GET', 'POST'])
+def upload_impact_list():
     if request.method == 'GET':
-        return render_template('input-impact_list.html')
+        return render_template('upload_impact_list.html')
     else:
-        file = request.files['input-impact_list']
+        # on work: Input Excel check, error return
+        file = request.files['upload_impact_list']
         df = impact_list_preprocess(file)
         yconnect = create_engine('mysql+pymysql://root:init#201605@127.0.0.1:3306/change_demo?charset=utf8')
         pd.io.sql.to_sql(df, 'impact_list', yconnect, schema='change_demo', if_exists='replace')
+        return render_template('upload_success.html', upload_filename='Impact List ')
 
-        return 'Upload Success'
 
-
-@app.route('/extract/', methods=['GET','POST'])
-def extract():
-    a = request.args.get('a', 0, type=int)
-    print()
-    pass
-
-@app.route('/impact_list/')
-def impact_list():
-    context = {
-        'HIs' : Hi_dm_list.query.all()
-    }
-    return render_template('impact_list.html', **context)
+@app.route('/impact_list_extract/', methods=['GET','POST'])
+def impact_list_extract():
+    if request.method == 'GET':
+        context = {
+            'HIs' : Hi_dm_list.query.all()
+        }
+        return render_template('impact_list_extract.html', **context)
+    else:
+        a = request.form.get('option[]')
+        b = [1,2,3,4]
+        print(a)
+        return render_template('extract_result.html', list=a)
 
 
 if __name__ == '__main__':
