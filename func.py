@@ -59,18 +59,22 @@ def data_type(pn):
             return 'GBN'
         elif re.match(r'88\d[^0]C\d{5}G7\d',pn):
             return 'MBS'
-        elif re.match(r'88\d0C\d{5}G7\d',pn):
+        elif re.match(r'8800C\d{5}G7\d',pn):
             return 'Specific_RBA'
     # 若全不匹配，返回N/A pn
     else:
         return 'N/A pn'
 
 def get_edz(pn):
+    # pn为string类型输入，或者是np.nan
     if pn is np.nan:
         return None
     elif data_type(pn) in ['HI','GBN','MBS','RBA','DISC','DISC_ASY','DISC_RBA']:
         return int(pn[2:4]+pn[5])
     elif data_type(pn) in ['R_RBA','R_DISC_ASY','R_HI']:
         return int(pn[4:6]+pn[7])
+    # specific RBA需要对数据库进行查询才能获取
+    # elif data_type(pn) in ['Specific_RBA']:
+    #     return
     else:
         return None

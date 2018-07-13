@@ -3,10 +3,28 @@
 {% block title %}Impact List{% endblock %}
 
 {% block head %}
-    <script src="{{ url_for('static',filename="js/impact_list_extract.js") }}"></script>
+    <script>
+        $(document).ready(function(){
+            $("button").click(function(){
+                var selectItem = [];
+                $('.selectpicker').children().each(
+                    function(e,item){
+                        if(item.selected)
+                            selectItem.push(item.value)
+                    });
+{#                var edz_list = JSON.stringify(selectItem);#}
+{#                $.ajax({#}
+{#                    url:"/impact_list_test/",#}
+{#                    type: 'POST',#}
+{#                    dataType: 'json',#}
+{#                    data: edz_list#}
+{#                });#}
+            });
+        });
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/impact_list.css') }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/impact_list.css') }}">
 {% endblock %}
 
 {% block main %}
@@ -26,9 +44,5 @@
                 <button type="button" id="button1" class="btn btn-primary">Extract</button>
             </div>
         </form>
-        <p>
-
-{#        <div id='output'></div>#}
-        </p>
     </div>
 {% endblock %}

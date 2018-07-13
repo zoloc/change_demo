@@ -22,6 +22,8 @@ class Impact_list(db.Model):
     effectivity_aft = db.Column(db.Text)
     edz = db.Column(db.Integer)
 
+
+
 class Hi_dm_list(db.Model):
     __tablename__ = 'hi_dm_list'
     index = db.Column(db.Integer, primary_key=True, autoincrement=True)

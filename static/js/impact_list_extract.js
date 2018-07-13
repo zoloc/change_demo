@@ -9,7 +9,7 @@ $(document).ready(function(){
         // $('#output').append(selectItem.join(','))
             var edz_list = JSON.stringify(selectItem);
             $.ajax({
-                url:"/impact_list_extract",
+                url:"/impact_list_extract/",
                 type: 'POST',
                 dataType: 'json',
                 data: edz_list

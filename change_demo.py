@@ -1,10 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify, json, make_response, send_file
 import pandas as pd
-import config
-from lib import impact_list_preprocess
+import config, os
+from func import impact_list_preprocess
 from exts import db
 from sqlalchemy import create_engine
-import json
 
 from models import Impact_list, Hi_dm_list
 
@@ -30,18 +29,33 @@ def upload_impact_list():
         return render_template('upload_success.html', upload_filename='Impact List ')
 
 
-@app.route('/impact_list_extract', methods=['GET','POST'])
+@app.route('/impact_list_extract/', methods=['GET','POST'])
 def impact_list_extract():
     if request.method == 'GET':
         context = {
             'HIs' : Hi_dm_list.query.all()
         }
         return render_template('impact_list_extract.html', **context)
-    else:
-        edz_list = request.get_json('edz_data')
-        print(edz_list)
-        return render_template('extract_result.html', edz_list=edz_list)
+    # else:
+    #     edz_list = request.get_json('edz_data')
+    #     print(edz_list)
+    #     return
 
+@app.route('/impact_list_test/', methods=['POST'])
+def impact_list_test():
+    edz_list = request.get_json('edz_list')
+    df = pd.DataFrame(edz_list)
+    xlsdir = 'C://Users//LKS00085//Python//learn flask//change_demo//static//tempfile//testsave.xlsx'
+    df.to_excel(xlsdir, sheet_name='Sheet1')
+    #response = make_response(send_file(xlsdir))
+    #response.headers["Content-Disposition"] = "attachment; filename=C://Users//LKS00085//Python//learn flask//change_demo//static//tempfile//testsave.xlsx;" #% xlsdir
+    return redirect(url_for('impact_list_test_download', filedir=xlsdir))
+
+@app.route('/impact_list_test/download/<filedir>', methods=['GET'])
+def impact_list_test_download(filedir):
+    response = make_response(send_file(filedir))
+    response.headers["Content-Disposition"] = "attachment; filename=%s" % filedir
+    return response
 
 if __name__ == '__main__':
     app.run()
