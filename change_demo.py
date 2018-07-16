@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, json, make_response, send_file
 import pandas as pd
-import config, os
+import config, os, string
 from func import impact_list_preprocess
 from exts import db
 from sqlalchemy import create_engine
@@ -43,19 +43,25 @@ def impact_list_extract():
 
 @app.route('/impact_list_test/', methods=['POST'])
 def impact_list_test():
-    edz_list = request.get_json('edz_list')
+    edz_str = request.form.get('edz')
+    edz_list = edz_str.split('&')
+
+
+
+
+
     df = pd.DataFrame(edz_list)
     xlsdir = 'C://Users//LKS00085//Python//learn flask//change_demo//static//tempfile//testsave.xlsx'
     df.to_excel(xlsdir, sheet_name='Sheet1')
-    #response = make_response(send_file(xlsdir))
-    #response.headers["Content-Disposition"] = "attachment; filename=C://Users//LKS00085//Python//learn flask//change_demo//static//tempfile//testsave.xlsx;" #% xlsdir
-    return redirect(url_for('impact_list_test_download', filedir=xlsdir))
-
-@app.route('/impact_list_test/download/<filedir>', methods=['GET'])
-def impact_list_test_download(filedir):
-    response = make_response(send_file(filedir))
-    response.headers["Content-Disposition"] = "attachment; filename=%s" % filedir
+    response = make_response(send_file(xlsdir))
+    response.headers["Content-Disposition"] = "attachment; filename=abc.xlsx"
     return response
+
+# @app.route('/impact_list_test/download/', methods=['GET'])
+# def impact_list_test_download(filedir):
+#     response = make_response(send_file(filedir))
+#     response.headers["Content-Disposition"] = "attachment; filename=%s" % filedir
+#     return response
 
 if __name__ == '__main__':
     app.run()

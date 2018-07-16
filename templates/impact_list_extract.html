@@ -12,6 +12,8 @@
                         if(item.selected)
                             selectItem.push(item.value)
                     });
+                var edzStr = selectItem.join("&");
+                $('#edz_list').val(edzStr);
 {#                var edz_list = JSON.stringify(selectItem);#}
 {#                $.ajax({#}
 {#                    url:"/impact_list_test/",#}
@@ -34,15 +36,16 @@
             <li role="presentation"><a href="#">Extract by Input Excel(TBD) <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a></li>
         </ul>
         <h3>Select the EDZs you want to extracted </h3>
-        <form id="optionForm" method="post">
+        <form id="optionForm" action="{{ url_for('impact_list_test') }}" method="post">
             <div class="selector">
                 <select class="selectpicker" multiple data-live-search="true" data-selected-text-format="count > 3" data-actions-box="true">
                 {% for HI in HIs %}
                     <option value="{{ HI.edz }}">{{ HI.edz }}</option>
                 {% endfor %}
                 </select>
-                <button type="button" id="button1" class="btn btn-primary">Extract</button>
+                <button type="submit" id="button1" class="btn btn-primary">Extract</button>
             </div>
+            <input type="hidden" id="edz_list" name="edz" value="#">
         </form>
     </div>
 {% endblock %}
