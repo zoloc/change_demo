@@ -24,8 +24,8 @@ def upload_impact_list():
         # on work: Input Excel check, error return
         file = request.files['upload_impact_list']
         df = impact_list_preprocess(file)
-        yconnect = create_engine('mysql+pymysql://root:init#201605@127.0.0.1:3306/change_demo?charset=utf8')
-        pd.io.sql.to_sql(df, 'impact_list', yconnect, schema='change_demo', if_exists='replace')
+        engine = create_engine('mysql+pymysql://root:init#201605@127.0.0.1:3306/change_demo?charset=utf8')
+        pd.io.sql.to_sql(df, 'impact_list', engine, schema='change_demo', if_exists='replace')
         return render_template('upload_success.html', upload_filename='Impact List ')
 
 
@@ -43,14 +43,16 @@ def impact_list_extract():
 
 @app.route('/impact_list_test/', methods=['POST'])
 def impact_list_test():
+    '''
+    This funcation query column 'edz' in database and return an impact list with .xlsx format for user downloading.
+    User aware: Data not exist in impact assessment database could not show
+    on work: For DCN do not have impact data which is contained by EDZ, need an additional to filter and add them into impact list
+    '''
     edz_str = request.form.get('edz')
-    edz_list = edz_str.split('&')
+    edz_list = edz_str.split(',')
+    engine = create_engine('mysql+pymysql://root:init#201605@127.0.0.1:3306/change_demo?charset=utf8')
 
-
-
-
-
-    df = pd.DataFrame(edz_list)
+    df = pd.read_sql_query('SELECT * FROM impact_list WHERE edz in (%s)'%edz_str, engine)
     xlsdir = 'C://Users//LKS00085//Python//learn flask//change_demo//static//tempfile//testsave.xlsx'
     df.to_excel(xlsdir, sheet_name='Sheet1')
     response = make_response(send_file(xlsdir))

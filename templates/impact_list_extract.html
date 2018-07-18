@@ -12,7 +12,7 @@
                         if(item.selected)
                             selectItem.push(item.value)
                     });
-                var edzStr = selectItem.join("&");
+                var edzStr = selectItem.join(",");
                 $('#edz_list').val(edzStr);
 {#                var edz_list = JSON.stringify(selectItem);#}
 {#                $.ajax({#}
