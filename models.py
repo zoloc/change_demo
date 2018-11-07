@@ -7,6 +7,8 @@ class User(db.Model):
     password = db.Column(db.String(100),nullable=False)
 
 class Impact_list(db.Model):
+    # Extract by TP tool
+    # On work: could be saved per change authority in the future
     __tablename__ = 'impact_list'
     index = db.Column(db.Integer, primary_key=True, autoincrement=True)
     change_number = db.Column(db.Text)
@@ -21,13 +23,17 @@ class Impact_list(db.Model):
     quantity_aft = db.Column(db.Text)
     effectivity_aft = db.Column(db.Text)
     edz = db.Column(db.Integer)
-
+    harness = db.Column(db.Integer)
+    type = db.Column(db.Text)
 
 
 class Hi_dm_list(db.Model):
+    # Extract from Engineering Manager/DM Management
     __tablename__ = 'hi_dm_list'
     index = db.Column(db.Integer, primary_key=True, autoincrement=True)
     edz = db.Column(db.Integer, nullable=False)
     dci = db.Column(db.String(50),nullable=False)
     AC103_pn = db.Column(db.String(20))
     AC104_pn = db.Column(db.String(20))
+
+

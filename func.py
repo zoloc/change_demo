@@ -20,10 +20,12 @@ def impact_list_preprocess(object):
     }
     df.rename(columns=column_change, inplace=True)
     df['edz'] = df['pn_after'].apply(get_edz)
+    df['harness'] = df['pn_after'].apply(get_harness)
+    df['type'] = df['pn_after'].apply(get_datatype)
     df.loc[df['edz'].isnull(), ['edz']] = df.loc[df['edz'].isnull(), ['pn_bef']]['pn_bef'].apply(get_edz)
     return df
 
-def data_type(pn):
+def get_datatype(pn):
     if pn is np.nan:
         return 'N/A pn'
     # 判断PH
@@ -69,12 +71,27 @@ def get_edz(pn):
     # pn为string类型输入，或者是np.nan
     if pn is np.nan:
         return None
-    elif data_type(pn) in ['HI','GBN','MBS','RBA','DISC','DISC_ASY','DISC_RBA']:
+    elif get_datatype(pn) in ['HI', 'GBN', 'MBS', 'RBA', 'DISC', 'DISC_ASY', 'DISC_RBA']:
         return int(pn[2:4]+pn[5])
-    elif data_type(pn) in ['R_RBA','R_DISC_ASY','R_HI']:
+    elif get_datatype(pn) in ['R_RBA', 'R_DISC_ASY', 'R_HI']:
         return int(pn[4:6]+pn[7])
     # specific RBA需要对数据库进行查询才能获取
     # elif data_type(pn) in ['Specific_RBA']:
     #     return
+    else:
+        return None
+
+def get_harness(pn):
+    # pn为string类型输入，或者是np.nan
+    if pn is np.nan:
+        return None
+    elif get_datatype(pn) in ['HA']:
+        return int(pn[2]+pn[5:8])
+    elif get_datatype(pn) in ['R_HA']:
+        return int(pn[4]+pn[7:10])
+    elif get_datatype(pn) in ['PH']:
+        return int(pn[5]+pn[8:11])
+    elif get_datatype(pn) in ['MBS', 'GBN']:
+        return int(pn[-7:-3])
     else:
         return None

@@ -5,7 +5,7 @@
 {% block head %}
     <script>
         $(document).ready(function(){
-            $("button").click(function(){
+            $("#button1").click(function(){
                 var selectItem = [];
                 $('.selectpicker').children().each(
                     function(e,item){
@@ -22,30 +22,65 @@
 {#                    data: edz_list#}
 {#                });#}
             });
+            $("#button2").click(function(){
+                var selectItem = [];
+                $('.selectpicker').children().each(
+                    function(e,item){
+                        if(item.selected)
+                            selectItem.push(item.value)
+                    });
+                var harnessStr = selectItem.join(",");
+                $('#harness_list').val(harnessStr);
+            });
         });
+
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for("static", filename='css/bootstrap/bootstrap-select/css/bootstrap-select.min.css') }}">
+    <script src="{{ url_for('static', filename='css/bootstrap/bootstrap-select/js/bootstrap-select.min.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/impact_list.css') }}">
 {% endblock %}
 
 {% block main %}
     <div class="impact_list">
-        <ul class="nav nav-tabs">
-            <li role="presentation" class="active"><a href="#">Extract by EDZs <span class="glyphicon glyphicon-check" aria-hidden="true"></span></a></li>
-            <li role="presentation"><a href="#">Extract by Input Excel(TBD) <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a></li>
+        <ul id="extractMethodTab" class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#edz" data-toggle="tab">Extract by EDZ <span class="glyphicon glyphicon-check" aria-hidden="true"></span></a></li>
+            <li role="presentation"><a href="#ha" data-toggle="tab">Extract by HA <span class="glyphicon glyphicon-check" aria-hidden="true"></span></a></li>
+            <li role="presentation"><a href="#changeAuthrity" data-toggle="tab">Extract by Change Authority(ECR,DCN,...) <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a></li>
         </ul>
-        <h3>Select the EDZs you want to extracted </h3>
-        <form id="optionForm" action="{{ url_for('impact_list_test') }}" method="post">
-            <div class="selector">
-                <select class="selectpicker" multiple data-live-search="true" data-selected-text-format="count > 3" data-actions-box="true">
-                {% for HI in HIs %}
-                    <option value="{{ HI.edz }}">{{ HI.edz }}</option>
-                {% endfor %}
-                </select>
-                <button type="submit" id="button1" class="btn btn-primary">Extract</button>
+        <div id="myTabContent" class="tab-content">
+            <div role="tabpanel" class="tab-pane fade in active" id="edz">
+                <h3>Select the EDZs you want to extracted </h3>
+                <form id="optionForm" action="{{ url_for('impact_list_download') }}" method="post">
+                    <div class="selector">
+                        <select class="selectpicker" multiple data-live-search="true" data-selected-text-format="count > 3" data-actions-box="true">
+                        {% for data in ImpactData_edz %}
+                            <option value="{{ data.edz | int }}">{{ data.edz | int }}</option>
+                        {% endfor %}
+                        </select>
+                        <button type="submit" id="button1" class="btn btn-primary">Extract</button>
+                    </div>
+                    <input type="hidden" id="edz_list" name="edz" value="#">
+                </form>
             </div>
-            <input type="hidden" id="edz_list" name="edz" value="#">
-        </form>
+            <div role="tabpanel" class="tab-pane fade" id="ha">
+                <h3>Select the HAs you want to extracted </h3>
+                <form id="optionForm" action="{{ url_for('impact_list_download') }}" method="post">
+                    <div class="selector">
+                        <select class="selectpicker" multiple data-live-search="true" data-selected-text-format="count > 3" data-actions-box="true">
+                        {% for data in ImpactData_harness %}
+                            <option value="{{ data.harness | int }}">{{ data.harness | int }}</option>
+                        {% endfor %}
+                        </select>
+                        <button type="submit" id="button2" class="btn btn-primary">Extract</button>
+                    </div>
+                    <input type="hidden" id="harness_list" name="harness" value="#">
+                </form>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="changeAuthrity">
+                <h3>Upload a list of change authority </h3>
+
+            </div>
+        </div>
+
     </div>
 {% endblock %}
